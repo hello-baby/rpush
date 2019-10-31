@@ -123,13 +123,6 @@ module Rpush
           log_error("Notification #{notification_id} failed with error: " + description)
           Rpush::Daemon.store.mark_ids_failed([notification_id], code, description, Time.now)
           reflect(:notification_id_failed, @app, notification_id, code, description)
-
-          if failed_pos
-            retry_ids = delivered_buffer[(failed_pos + 1)..-1]
-            retry_notification_ids(retry_ids, notification_id)
-          elsif delivered_buffer.size > 0
-            log_error("Delivery sequence unknown for notifications following #{notification_id}.")
-          end
         end
 
         def description_for_code(code)
